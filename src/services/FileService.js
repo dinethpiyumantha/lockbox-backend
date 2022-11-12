@@ -4,7 +4,7 @@ const path = require('path')
 const fs = require("fs");
 
 const FileService = {
-  upload: async (file) => {
+  upload: async (file, info) => {
     try {
       // Create file object
       var fileObject = await Files.create({
@@ -12,7 +12,7 @@ const FileService = {
         type: file.mimetype,
         size: file.size,
         file: NA,
-        author: NA,
+        author: info.author,
       })
 
       //   Create file name with file extention

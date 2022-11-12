@@ -3,7 +3,7 @@ const { nullObjectJson } = require("../utils/Constants");
 
 const FileController = {
     upload: async (req, res) => {
-        const file = await FileService.upload(req.files.file);
+        const file = await FileService.upload(req.files.file, req.body);
         if(file) {
             res.json(file).status(200);
         } else {
