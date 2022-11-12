@@ -15,11 +15,15 @@ const FilesSchema = new Schema({
     },
     author: {
         type: String,
+        required: false
+    },
+    type: {
+        type: String,
         required: true
     },
-    note: {
-        type: String,
-        required: false
+    size: {
+        type: Number,
+        required: true
     }
 }, { timestamps: true });
 
