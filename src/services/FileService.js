@@ -12,7 +12,7 @@ const FileService = {
         type: file.mimetype,
         size: file.size,
         file: NA,
-        author: info.author,
+        owner: info.author,
       })
 
       //   Create file name with file extention
