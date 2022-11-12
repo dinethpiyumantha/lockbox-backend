@@ -13,7 +13,7 @@ const FilesSchema = new Schema({
         type: String,
         required: true
     },
-    author: {
+    owner: {
         type: String,
         required: false
     },
