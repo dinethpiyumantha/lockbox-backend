@@ -19,9 +19,11 @@ const URL = `${process.env.URL || 'http://localhost'}:${PORT}${APP_URI}`;
 
 // Routers
 const fileRouter = require("./routes/FileRouter");
+const messageRouter = require("./routes/MessageRouter");
 const { mongoodbConnect } = require("./configs/MongodbConfig");
 
 app.use(`${APP_URI}/file`, fileRouter);
+app.use(`${APP_URI}/message`, messageRouter);
 
 app.get(`${APP_URI}/`, (req, res) => {
     res.json(appHome).status(404);
