@@ -42,13 +42,13 @@ const MessageService = {
     },
 
     update: async (id, message) => {
-        const message = null;
+        const latest = null;
         try {
-            message = await Message.findByIdAndUpdate(id, message);
+            latest = await Message.findByIdAndUpdate(id, message);
         } catch(err) {
             console.log(err);
         }
-        return message;
+        return latest;
     }
 }
 
