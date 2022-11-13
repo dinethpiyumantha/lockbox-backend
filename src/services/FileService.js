@@ -1,7 +1,7 @@
 const Files = require('../models/File')
 const { success, NA } = require('../utils/Constants')
 const path = require('path')
-const fs = require("fs");
+const fs = require('fs')
 
 const FileService = {
   upload: async (file, info) => {
@@ -29,7 +29,7 @@ const FileService = {
       // Upload file into storage
       file.mv(uploadPath, async (err, result) => {
         if (err) {
-          this.removeById(fileObject.id)
+          await Files.findByIdAndDelete(fileObject.id)
           fileObject = null
           throw err
         }
@@ -43,24 +43,28 @@ const FileService = {
   },
 
   removeById: async (id) => {
-    var file = null;
+    var file = null
     try {
-
       // Find and get file details
-        file = await Files.findById(id);    
+      file = await Files.findById(id)
 
-        // Set file path
-        var filePath = path.join(__dirname, "..", file.file);
+      // Set file path
+      var filePath = path.join(__dirname, '..', file.file)
 
+      if (!fs.existsSync(filePath)) {
+        console.log('No such file!');
+        await Files.findByIdAndRemove(file.id);
+      } else {
         // Delete file from storage
         fs.unlink(filePath, (err) => {
-            if(err) {
-                throw err;
-            }
+          if (err) {
+            throw err
+          }
 
-            // Delete file info from db
-            Files.findByIdAndRemove(id);
-        });
+          // Delete file info from db
+          Files.findByIdAndRemove(id)
+        })
+      }
     } catch (err) {
       console.log(err)
     }
@@ -88,15 +92,15 @@ const FileService = {
   },
 
   downloadById: async (id) => {
-    var filePath = null;
+    var filePath = null
     try {
       const file = await Files.findById(id)
       // Set file path
-      filePath = path.join(__dirname, "..", file.file);
+      filePath = path.join(__dirname, '..', file.file)
     } catch (err) {
       console.log(err)
     }
-    return filePath;
+    return filePath
   },
 }
 
