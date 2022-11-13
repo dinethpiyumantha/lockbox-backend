@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Logger = require("../utils/Logger");
 
 const mongoodbConnect = async () => {
     try {
@@ -9,7 +10,7 @@ const mongoodbConnect = async () => {
                 useUnifiedTopology: true
             }
         );
-        console.log(`Mongodb database connection established`);
+        Logger.info(`Mongodb database connection established`);
     } catch (err) {
         console.log(`Error: Mongodb database connection cannot established`);
     }
