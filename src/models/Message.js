@@ -6,7 +6,7 @@ const MessageSchema = new Schema({
         required: true
     },
     message: {
-        type: String,
+        type: Object,
         required: true
     }
 }, { timestamps: true });

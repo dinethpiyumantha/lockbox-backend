@@ -35,7 +35,7 @@ const FileController = {
     downloadById: async (req, res) => {
         const file = await FileService.downloadById(req.params.id);
         if(file) {
-            res.download(file)
+            res.download(file, `${req.params.id}.jpeg`)
         } else {
             res.json(nullObjectJson).status(500);
         }

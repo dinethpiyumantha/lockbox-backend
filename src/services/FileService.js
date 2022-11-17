@@ -2,6 +2,8 @@ const Files = require('../models/File')
 const { success, NA } = require('../utils/Constants')
 const path = require('path')
 const fs = require('fs')
+const Logger = require('../utils/Logger')
+const SecurityService = require('./SecurityService')
 
 const FileService = {
   upload: async (file, info) => {
@@ -27,13 +29,29 @@ const FileService = {
       })
 
       // Upload file into storage
-      file.mv(uploadPath, async (err, result) => {
-        if (err) {
-          await Files.findByIdAndDelete(fileObject.id)
-          fileObject = null
-          throw err
-        }
-      })
+      // file.mv(uploadPath, async (err, result) => {
+      //   if (err) {
+      //     await Files.findByIdAndDelete(fileObject.id)
+      //     fileObject = null
+      //     throw err
+      //   }
+      // });
+
+      // Write encrypted file in storage
+      fs.writeFile(
+        uploadPath,
+        SecurityService.file.encrypt(file.data),
+        async (err, file) => {
+          if (err) {
+            await Files.findByIdAndDelete(fileObject.id)
+            fileObject = null
+            Logger.error('File creation unsuccess')
+          }
+          if (file) {
+            Logger.log('New file created')
+          }
+        },
+      )
 
       return fileObject
     } catch (err) {
@@ -52,8 +70,8 @@ const FileService = {
       var filePath = path.join(__dirname, '..', file.file)
 
       if (!fs.existsSync(filePath)) {
-        console.log('No such file!');
-        await Files.findByIdAndRemove(file.id);
+        console.log('No such file!')
+        await Files.findByIdAndRemove(file.id)
       } else {
         // Delete file from storage
         fs.unlink(filePath, (err) => {
@@ -93,14 +111,28 @@ const FileService = {
 
   downloadById: async (id) => {
     var filePath = null
+    var newFile = null
     try {
       const file = await Files.findById(id)
+
       // Set file path
       filePath = path.join(__dirname, '..', file.file)
+      decryptedFileContent = SecurityService.file.decrypt(
+        fs.readFileSync(filePath),
+      )
+      tempPath = path.join(__dirname, '..', 'temp', id + '.temp')
+      if (!fs.existsSync(tempPath)) {
+        fs.writeFile(tempPath, decryptedFileContent, (err) => {
+          if (err) throw err
+        })
+        newFile = tempPath
+      } else {
+        newFile = tempPath
+      }
     } catch (err) {
       console.log(err)
     }
-    return filePath
+    return newFile
   },
 }
 

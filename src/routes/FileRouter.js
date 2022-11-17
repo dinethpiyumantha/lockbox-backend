@@ -1,9 +1,10 @@
 const express = require("express");
 const FileController = require("../controllers/FileController");
+const Logger = require("../utils/Logger");
 const router = express.Router();
 
 router.use(async (req, res, next) => {
-    console.log(`REQUEST_RECIEVED ->\t{header:${JSON.stringify(req.header)}, body:${JSON.stringify(req.body)}}`);
+    // Logger.log(`REQUEST_RECIEVED ->\t{header:${JSON.stringify(req.header)}, body:${JSON.stringify(req.body)}}`);
     next();
 });
 

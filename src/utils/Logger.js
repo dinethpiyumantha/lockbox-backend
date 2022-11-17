@@ -1,11 +1,12 @@
 var time = false
 var logLevel = 'debug'
 const Logger = {
+  disable: (window) => window.console.log = () => {},
   timeEnable: () => (time = true),
   timeDisable: () => (time = false),
   head: (text) => {
     console.log(
-      `\n\n\n${Colors.BgWhite}${Colors.FgBlack} ${text} ${Colors.Reset}`,
+      `${Colors.BgGreen}${Colors.FgBlack} ${text} ${Colors.Reset}`,
     )
   },
   link: (text) => {
@@ -40,6 +41,13 @@ const Logger = {
         }\t${text}${Colors.Reset}`,
       )
     }
+  },
+  log: (text) => {
+    console.log(
+      `${Colors.BgWhite}${Colors.FgBlack} ${'LOG  '} ${Colors.Reset}${
+        Colors.FgWhite
+      }\t${text}${Colors.Reset}`,
+    )
   },
   setLevel: (level) => {
     if (level === 'info') {

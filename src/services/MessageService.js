@@ -1,10 +1,17 @@
-const Message = require("../models/Message")
+const Message = require("../models/Message");
+const SecurityService = require("./SecurityService");
 
 const MessageService = {
     create: async (message) => {
-        const inserted = null;
+        var inserted = null;
         try {
-            inserted = await Message.create(message);
+            // console.log(message);
+            var msg = {
+                owner: message.owner,
+                message: SecurityService.message.encrypt(message.message)
+            }
+            inserted = await Message.create(msg);
+            // console.log(inserted);
         } catch(err) {
             console.log(err);
         }
@@ -22,9 +29,14 @@ const MessageService = {
     },
 
     getById: async (id) => {
-        const message = null;
+        var message = null;
         try {
-            message = await Message.findById(id);
+            let encrypted = await Message.findById(id);
+            message = encrypted;
+            message = {
+                owner: encrypted.owner,
+                message: SecurityService.message.decrypt(encrypted.message)
+            }
         } catch(err) {
             console.log(err);
         }
@@ -32,7 +44,7 @@ const MessageService = {
     },
 
     removeById: async (id) => {
-        const message = null;
+        var message = null;
         try {
             message = await Message.findByIdAndDelete(id);
         } catch(err) {
@@ -42,7 +54,7 @@ const MessageService = {
     },
 
     update: async (id, message) => {
-        const latest = null;
+        var latest = null;
         try {
             latest = await Message.findByIdAndUpdate(id, message);
         } catch(err) {
